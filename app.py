@@ -22,16 +22,10 @@ classifier=pickle.load(model)
 def index():
     return {'message': 'Hello, World'}
 
-# 4. Route with a single parameter, returns the parameter within a message
-#    Located at: http://127.0.0.1:8000/AnyNameHere
-@app.get('/{name}')
-def get_name(name: str):
-    return {'Welcome To Krish Youtube Channel': f'{name}'}
-
 # 3. Expose the prediction functionality, make a prediction from the passed
 #    JSON data and return the predicted Crop Yeild.
 @app.post('/predict')
-def predict_banknote(data:YeildPrediction):
+def predict_yeild(data:YeildPrediction):
     data = data.dict()
     state=data['state']
     local_gov=data['local_gov']
@@ -40,9 +34,9 @@ def predict_banknote(data:YeildPrediction):
    # print(classifier.predict([[state,local_gov,crop,area]]))
     prediction = classifier.predict([[state,local_gov,crop,area]])
     if(prediction[0]>0.5):
-        prediction="Fake note"
+        prediction=prediction[0]
     else:
-        prediction="Its a Bank note"
+        prediction="Something went wrong!"
     return {
         'prediction': prediction
     }
